@@ -1,17 +1,23 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import illustrationImg from '../images/illustration.svg'
-import logo from '../images/lemme.svg'
-import googleIcon from '../images/google-icon.svg'
+import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/Button';
-import '../styles/auth.scss'
+import logo from '../images/lemme.svg';
+import illustrationImg from '../images/illustration.svg';
+import googleIcon from '../images/google-icon.svg';
+import '../styles/auth.scss';
 
 export function Home() {
-  const history = useHistory()
+  const history = useHistory();
+  const { user, signInWithGoogle } = useAuth();
 
-  function navigateToNewRoom() {
-    history.push('/rooms/new')
-  }
+  async function handleCreateRoom() {
+    if(!user) {
+      await signInWithGoogle();
+    };
+
+    history.push('/rooms/new');
+  };
 
   return (
     <div id="page-auth">
@@ -23,7 +29,7 @@ export function Home() {
       <main>
         <div className="main-content">
           <img className="logo" src={ logo } alt="Logo Lemmeask" />
-          <button onClick={ navigateToNewRoom } className="create-room">
+          <button onClick={ handleCreateRoom } className="create-room">
             <img src={ googleIcon } alt="Icon Google" />
             Crie sua sala com o Google
           </button>
